@@ -108,7 +108,7 @@
         <div class="player-container">
             <audio id="audioPlayer" controls>
                 <!-- ТВОЯ ССЫЛКА НА АУДИО -->
-                <source src="https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/NSM8Rsp6JT-ykQ" type="audio/mp4">
+                <source src="https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/NSM8Rsp6JT-ykQ" type="audio/mpeg">
                 Ваш браузер не поддерживает аудио элемент.
             </audio>
             
@@ -132,48 +132,38 @@
     </div>
 	
 	<script>
-        const audio = document.getElementById('audioPlayer');
-        const statusEl = document.getElementById('status');
-        
-        // Автовоспроизведение при загрузке
-        document.addEventListener('DOMContentLoaded', async function() {
-            statusEl.textContent = '▶️ Запуск автовоспроизведения...';
-            
-            try {
-                await audio.play();
-                statusEl.textContent = '✅ Аудио играет автоматически';
-                statusEl.style.color = '#4CAF50';
-            } catch (error) {
-                console.log('Браузер заблокировал автовоспроизведение:', error);
-                statusEl.innerHTML = '⏸️ Автовоспроизведение заблокировано<br><small>Нажми кнопку "Включить звук вручную" или кнопку play на плеере</small>';
-                statusEl.style.color = '#ff9800';
-                audio.controls = true;
-            }
-        });
-        
-        // Функция для ручного запуска
-        function playAudio() {
-            audio.play()
-                .then(() => {
-                    statusEl.textContent = '✅ Аудио запущено вручную';
-                    statusEl.style.color = '#4CAF50';
-                })
-                .catch(error => {
-                    statusEl.textContent = '❌ Ошибка: ' + error.message;
-                    statusEl.style.color = '#ff6b6b';
-                });
-        }
-        
-        // Отслеживание состояния аудио
-        audio.addEventListener('playing', () => {
-            statusEl.textContent = '▶️ Аудио играет';
-            statusEl.style.color = '#4CAF50';
-        });
-        
-        audio.addEventListener('pause', () => {
-            statusEl.textContent = '⏸️ Аудио на паузе';
-            statusEl.style.color = '#ff9800';
-        });
-    </script>
+		const audio = document.getElementById('audioPlayer');
+		const statusEl = document.getElementById('status');
+
+		async function attemptPlay() {
+			try {
+				await audio.play();
+				statusEl.textContent = '✅ Аудио играет';
+				statusEl.style.color = '#4CAF50';
+			} catch (error) {
+				console.log("Автоплей заблокирован");
+				statusEl.innerHTML = '⏸️ Нажмите кнопку "Включить звук", чтобы прослушать';
+				statusEl.style.color = '#ff9800';
+			}
+		}
+
+		// Запуск при загрузке
+		window.addEventListener('load', () => {
+			setTimeout(attemptPlay, 1000);
+		});
+
+		// Функция для кнопки
+		function playAudio() {
+			audio.play()
+				.then(() => {
+					statusEl.textContent = '✅ Аудио запущено вручную';
+					statusEl.style.color = '#4CAF50';
+				})
+				.catch(err => {
+					statusEl.textContent = '❌ Ошибка: ' + err.message;
+					statusEl.style.color = '#ff6b6b';
+				});
+		}
+	</script>
 </body>
 </html>
